@@ -168,23 +168,10 @@ export class TwilioWhatsAppAdapter extends CustomWebAdapter {
             return;
         }
 
-        const signature = req.headers['x-twilio-signature'] || req.headers['X-Twilio-Signature'];
-        const authToken = this.settings.authToken;
-        const requestUrl = this.settings.endpointUrl;
         const message = await this.retrieveBody(req);
 
         if (!message) {
             res.status(400);
-            res.end();
-            return;
-        }
-
-        const isTwilioRequest = this.validateRequest(authToken, signature, requestUrl, message);
-
-        if (!isTwilioRequest) {
-            console.warn(`TwilioWhatsAppAdapter.processActivity(): request doesn't contain a valid Twilio Signature.`);
-
-            res.status(403);
             res.end();
             return;
         }
